@@ -84,15 +84,6 @@ export default function ImportPage() {
                   <Download className="h-4 w-4" />
                   <span>テンプレートをダウンロード</span>
                 </button>
-                <a
-                  href="/sample-data.md"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
-                >
-                  <FileSpreadsheet className="h-4 w-4" />
-                  <span>詳しい作成ガイド</span>
-                </a>
               </div>
             </div>
           </div>

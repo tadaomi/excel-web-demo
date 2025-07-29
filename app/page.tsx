@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Upload, Filter, GitMerge, FileText, Download, TrendingUp } from 'lucide-react'
+import { Upload, Filter, GitMerge, FileText, Download, TrendingUp, Rocket, ArrowRight } from 'lucide-react'
 import { storage } from '@/lib/storage'
 import { Product, Quote } from '@/lib/types'
 import { format } from 'date-fns'
@@ -77,6 +77,79 @@ export default function Home() {
           </p>
         </div>
       </div>
+
+      {/* はじめかたガイド - データがない場合のみ表示 */}
+      {products.length === 0 && (
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-8 mb-8 border border-blue-200 dark:border-blue-700">
+          <div className="flex items-center justify-center mb-6">
+            <div className="bg-blue-100 dark:bg-blue-800 p-3 rounded-full">
+              <Rocket className="h-8 w-8 text-blue-600 dark:text-blue-300" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white ml-4">
+              Excel価格管理システムの始め方
+            </h2>
+          </div>
+          
+          <p className="text-gray-600 dark:text-gray-300 text-center mb-8 max-w-2xl mx-auto">
+            初回利用の方は、以下の手順でサンプルデータを使って機能をお試しください
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-3 text-sm font-bold">
+                  1
+                </div>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  サンプルデータダウンロード
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  インポート画面でサンプルExcelファイルをダウンロード
+                </p>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-3 text-sm font-bold">
+                  2
+                </div>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  データインポート
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  ダウンロードしたファイルをそのままアップロード
+                </p>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mx-auto mb-3 text-sm font-bold">
+                  3
+                </div>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  商品データ確認
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  商品管理画面でサンプルデータを確認
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center">
+            <Link
+              href="/import"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 dark:bg-blue-700 text-white font-medium rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+            >
+              <Upload className="h-5 w-5 mr-2" />
+              データインポート画面へ
+              <ArrowRight className="h-5 w-5 ml-2" />
+            </Link>
+          </div>
+        </div>
+      )}
 
       <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">クイックアクセス</h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
