@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { GitMerge, AlertCircle, CheckCircle } from 'lucide-react'
 import { storage } from '@/lib/storage'
 import { Product } from '@/lib/types'
@@ -16,15 +16,15 @@ export default function MergePage() {
   const [mergeStrategy, setMergeStrategy] = useState<'keep-first' | 'keep-latest' | 'keep-highest-price'>('keep-latest')
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set())
 
-  useEffect(() => {
-    loadProducts()
-  }, [])
-
-  const loadProducts = () => {
+  const loadProducts = useCallback(() => {
     const data = storage.getProducts()
     setProducts(data)
     findDuplicates(data)
-  }
+  }, [])
+
+  useEffect(() => {
+    loadProducts()
+  }, [loadProducts])
 
   const findDuplicates = (productList: Product[]) => {
     const groups = new Map<string, Product[]>()

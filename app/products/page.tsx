@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Edit2, Trash2, Save, X, Plus, Search, Copy } from 'lucide-react'
 import { storage } from '@/lib/storage'
 import { Product, FilterConfig } from '@/lib/types'
@@ -15,24 +15,16 @@ export default function ProductsPage() {
   const [categoryFilter, setCategoryFilter] = useState('')
   const [categories, setCategories] = useState<string[]>([])
 
-  useEffect(() => {
-    loadProducts()
-  }, [])
-
-  useEffect(() => {
-    filterProducts()
-  }, [products, searchTerm, categoryFilter])
-
-  const loadProducts = () => {
+  const loadProducts = useCallback(() => {
     const data = storage.getProducts()
     setProducts(data)
     
     // カテゴリ一覧を抽出
     const uniqueCategories = Array.from(new Set(data.map(p => p.category).filter(Boolean)))
     setCategories(uniqueCategories)
-  }
+  }, [])
 
-  const filterProducts = () => {
+  const filterProducts = useCallback(() => {
     let filtered = [...products]
     
     if (searchTerm) {
@@ -47,7 +39,15 @@ export default function ProductsPage() {
     }
     
     setFilteredProducts(filtered)
-  }
+  }, [products, searchTerm, categoryFilter])
+
+  useEffect(() => {
+    loadProducts()
+  }, [loadProducts])
+
+  useEffect(() => {
+    filterProducts()
+  }, [filterProducts])
 
   const handleEdit = (product: Product) => {
     setEditingId(product.id)

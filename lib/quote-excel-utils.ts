@@ -21,18 +21,18 @@ export function createQuoteExcelFile(quote: Quote): Blob {
   quote.items.forEach(item => {
     quoteData.push([
       item.productName,
-      item.unitPrice,
-      item.quantity,
-      item.amount
+      item.unitPrice.toString(),
+      item.quantity.toString(),
+      item.amount.toString()
     ])
   })
   
   // 合計行を追加
   quoteData.push(
     [],
-    ['', '', '小計:', quote.subtotal],
-    ['', '', '消費税:', quote.tax],
-    ['', '', '合計:', quote.totalAmount]
+    ['', '', '小計:', quote.subtotal.toString()],
+    ['', '', '消費税:', quote.tax.toString()],
+    ['', '', '合計:', quote.totalAmount.toString()]
   )
   
   // ワークシートを作成
