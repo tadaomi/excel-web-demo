@@ -1,0 +1,115 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Upload, Filter, GitMerge, FileText, Download, TrendingUp } from 'lucide-react'
+import { storage } from '@/lib/storage'
+import { Product, Quote } from '@/lib/types'
+import { format } from 'date-fns'
+import { ja } from 'date-fns/locale'
+
+export default function Home() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [quotes, setQuotes] = useState<Quote[]>([])
+
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  const loadData = () => {
+    setProducts(storage.getProducts())
+    setQuotes(storage.getQuotes())
+  }
+
+  const getLatestUpdate = () => {
+    if (products.length === 0) return null
+    
+    const latestProduct = products.reduce((latest, product) => {
+      return new Date(product.updatedAt) > new Date(latest.updatedAt) ? product : latest
+    })
+    
+    return new Date(latestProduct.updatedAt)
+  }
+
+  const latestUpdate = getLatestUpdate()
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+        ダッシュボード
+      </h1>
+      
+      <div className="grid gap-6 mb-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow dark:shadow-gray-700">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">登録商品数</h3>
+            <TrendingUp className="h-6 w-6 text-green-500" />
+          </div>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white">{products.length}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            {products.length === 0 ? '商品データなし' : `${products.length} 件の商品が登録済み`}
+          </p>
+        </div>
+        
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow dark:shadow-gray-700">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">作成済み見積</h3>
+            <FileText className="h-6 w-6 text-blue-500" />
+          </div>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white">{quotes.length}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            {quotes.length === 0 ? '見積データなし' : `${quotes.length} 件の見積が作成済み`}
+          </p>
+        </div>
+        
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow dark:shadow-gray-700">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">最終更新</h3>
+            <Upload className="h-6 w-6 text-purple-500" />
+          </div>
+          <p className="text-lg font-medium text-gray-900 dark:text-white">
+            {latestUpdate ? format(latestUpdate, 'MM/dd HH:mm') : '-'}
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            {latestUpdate 
+              ? format(latestUpdate, 'yyyy年MM月dd日', { locale: ja })
+              : 'データ未登録'
+            }
+          </p>
+        </div>
+      </div>
+
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">クイックアクセス</h2>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Link href="/import" className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow dark:shadow-gray-700 hover:shadow-md dark:hover:shadow-gray-600 transition-shadow">
+          <Upload className="h-8 w-8 text-blue-600 mb-3" />
+          <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">データインポート</h3>
+          <p className="text-gray-600 dark:text-gray-400">Excelファイルをアップロードしてデータを取り込みます</p>
+        </Link>
+        
+        <Link href="/products" className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow dark:shadow-gray-700 hover:shadow-md dark:hover:shadow-gray-600 transition-shadow">
+          <Filter className="h-8 w-8 text-green-600 mb-3" />
+          <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">価格管理</h3>
+          <p className="text-gray-600 dark:text-gray-400">商品の価格を一括で編集・更新できます</p>
+        </Link>
+        
+        <Link href="/merge" className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow dark:shadow-gray-700 hover:shadow-md dark:hover:shadow-gray-600 transition-shadow">
+          <GitMerge className="h-8 w-8 text-purple-600 mb-3" />
+          <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">データ統合</h3>
+          <p className="text-gray-600 dark:text-gray-400">重複したレコードを統合して整理します</p>
+        </Link>
+        
+        <Link href="/quotes" className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow dark:shadow-gray-700 hover:shadow-md dark:hover:shadow-gray-600 transition-shadow">
+          <FileText className="h-8 w-8 text-orange-600 mb-3" />
+          <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">見積作成</h3>
+          <p className="text-gray-600 dark:text-gray-400">顧客向けの見積書を簡単に作成できます</p>
+        </Link>
+        
+        <Link href="/export" className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow dark:shadow-gray-700 hover:shadow-md dark:hover:shadow-gray-600 transition-shadow">
+          <Download className="h-8 w-8 text-red-600 mb-3" />
+          <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">エクスポート</h3>
+          <p className="text-gray-600 dark:text-gray-400">データをExcel形式でダウンロードします</p>
+        </Link>
+      </div>
+    </div>
+  )
+}
